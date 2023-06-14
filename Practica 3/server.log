@@ -1,0 +1,9 @@
+INFO:werkzeug:127.0.0.1 - - [12/Jun/2023 22:03:22] "POST /recibir_pedido HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Jun/2023 22:03:22] "POST /solicitar_pedido HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Jun/2023 22:03:30] "[31m[1mPOST /informar_estado_pedido HTTP/1.1[0m" 405 -
+INFO:werkzeug:127.0.0.1 - - [12/Jun/2023 22:03:30] "GET /verificar_estado_pedido_restaurante HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Jun/2023 22:03:42] "POST /recibir_pedido HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Jun/2023 22:03:42] "POST /avisar_repartidor HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Jun/2023 22:03:51] "[31m[1mPOST /informar_estado_pedido HTTP/1.1[0m" 405 -
+INFO:werkzeug:127.0.0.1 - - [12/Jun/2023 22:03:51] "GET /verificar_estado_pedido_repartidor HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Jun/2023 22:04:00] "POST /marcar_entregado HTTP/1.1" 200 -
