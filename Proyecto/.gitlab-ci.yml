@@ -1,0 +1,101 @@
+stages:   
+  - build       
+  - test
+  - release
+  - deploy
+variables:
+      CI: "true"
+      DB_HOST : sag11.chukv7r3fgyy.us-east-1.rds.amazonaws.com
+      DB_NAME : sa_G11
+      DB_USER : admin
+      AWS_BUCKET_NAME : sag11
+      AWS_BUCKET_REGION : us-east-1
+      AWS_BUCKET_URL : https://sag11.s3.amazonaws.com/
+# Frontend
+.build-front:
+    image: node:alpine
+    stage: build
+    script: 
+        - cd frontend/my-app
+        - npm install
+        - npm run build
+    artifacts:
+        paths:
+            - frontend/my-app/build
+
+# Backend
+build-backend:
+  image: docker:20.10.16
+  stage: build
+  services:
+    - docker:20.10.16-dind
+  script:
+    - cd Backend
+    - echo "DB_USER=$DB_USER" >> .env
+    - echo "DB_HOST=$DB_HOST" >> .env
+    - echo "DB_NAME=$DB_NAME" >> .env
+    - echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+    - echo "AWS_BUCKET_NAME=$AWS_BUCKET_NAME" >> .env
+    - echo "AWS_BUCKET_REGION=$AWS_BUCKET_REGION" >> .env
+    - echo "AWS_PUBLIC_KEY=$AWS_PUBLIC_KEY" >> .env
+    - echo "AWS_SECRET_KEY=$AWS_SECRET_KEY" >> .env
+    - echo "AWS_BUCKET_URL=$AWS_BUCKET_URL" >> .env
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+    - docker-compose build 
+    - docker-compose push 
+
+
+deploy:
+  stage: deploy
+  image: 
+    name: amazon/aws-cli
+    entrypoint: [""]
+  rules:
+        - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+  script:
+    - yum install -y https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm
+    - yum install -y expect
+    - aws ssm send-command --document-name "AWS-RunShellScript" --targets "Key=instanceids,Values=i-01cd8ec8e7eff6c60,i-0d2c1fe22b62c442e" --parameters commands=['sudo docker-compose down','sudo docker-compose up -d'] --output text
+
+.deploy-front:
+  stage: deploy
+  image: 
+    name: amazon/aws-cli
+    entrypoint: [""]
+  rules:
+        - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+  script:
+    - aws amplify start-deployment --app-id dd069xqeanjjp --branch-name frontend-f2 --source-url https://gitlab.com/RicardoDubon/sa_g11.git
+
+
+# Pruebas unitarias, funcionales y de codigo
+
+.unit-test-job:  
+    image: node:alpine 
+    stage: test    
+    script:
+      - cd frontend/my-app
+      - npm install
+      - npm test
+
+.func-test-job:  
+    image: node:alpine 
+    stage: test    
+    variables:
+      PORT : 5002
+      
+    script:
+      - cd Backend/Sales
+      - npm install
+      - npx jest /src/test/sales.controller.test.ts --forceExit
+
+.code-test-job:  
+    image: node:alpine 
+    stage: release    
+    script:
+      - cd frontend/my-app
+      - npm install
+      - npx eslint ./src
+
+
+

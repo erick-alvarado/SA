@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const favoritelist_controller_1 = require("../controllers/favoritelist.controller");
+const favoritelist_controller_2 = require("../controllers/favoritelist.controller");
+const router = (0, express_1.Router)();
+router.get('/ping', favoritelist_controller_1.healthy);
+router.post('/postList', favoritelist_controller_2.InsertProduct);
+router.get('/getList/:id_user', favoritelist_controller_2.getProductList);
+exports.default = router;

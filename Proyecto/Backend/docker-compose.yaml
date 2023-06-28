@@ -1,0 +1,79 @@
+version: '3.7'
+networks:
+  Proyecto1network:
+    name : Proyecto1network
+    driver: bridge
+services:
+  Product:
+    build: ./Products
+    image: registry.gitlab.com/ricardodubon/sa_g10/product:latest
+    env_file:
+      - .env 
+    environment:
+      - PORT=5000
+    container_name: Products
+    hostname: Products
+    restart: always 
+    ports:
+      - 5000:5000
+    networks:
+      - Proyecto1network
+      
+  Users:
+    build: ./Users
+    image: registry.gitlab.com/ricardodubon/sa_g10/user:latest
+    env_file:
+      - .env 
+    environment:
+      - PORT=5001
+    container_name: Users
+    hostname: Users
+    restart: always 
+    ports:
+      - 5001:5001
+    networks:
+      - Proyecto1network
+  Sales:
+    build: ./Sales
+    image: registry.gitlab.com/ricardodubon/sa_g10/sale:latest
+    env_file:
+      - .env 
+    environment:
+      - PORT=5002
+    container_name: Sales
+    hostname: Sales
+    restart: always 
+    ports:
+      - 5002:5002
+    networks:
+      - Proyecto1network
+      
+  FavoritesList:
+    build: ./FavoritesList
+    image: registry.gitlab.com/ricardodubon/sa_g10/favorite:latest
+    env_file:
+      - .env 
+    environment:
+      - PORT=5003
+    container_name: FavoritesList
+    hostname: FavoritesList
+    restart: always 
+    ports:
+      - 5003:5003
+    networks:
+      - Proyecto1network
+
+  Auctions:
+    build: ./Auctions
+    image: registry.gitlab.com/ricardodubon/sa_g10/auction:latest
+    env_file:
+      - .env 
+    environment:
+      - PORT=5004
+    container_name: Auctions
+    hostname: Auctions
+    restart: always 
+    ports:
+      - 5004:5004
+    networks:
+      - Proyecto1network

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Factura</title>
+</head>
+<body>
+  <h1>Factura</h1>
+  
+  <p><strong>Número de factura:</strong> {{numeroFactura}}</p>
+  <p><strong>Fecha:</strong> {{fecha}}</p>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#productos}}
+      <tr>
+        <td>{{nombre}}</td>
+        <td>{{cantidad}}</td>
+        <td>{{precio}}</td>
+        <td>{{total}}</td>
+      </tr>
+      {{/productos}}
+    </tbody>
+  </table>
+  
+  <p><strong>Total:</strong> {{totalGeneral}}</p>
+</body>
+</html>
